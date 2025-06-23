@@ -1,17 +1,9 @@
-# Lookup existing role (if it exists)
+# Try to read existing IAM role (will fail at plan time if it doesn't exist)
 data "aws_iam_role" "existing_ssm_role" {
   name = "SSMRoleForEC2"
-
-  # Prevent failure if the role doesn't exist
-  lifecycle {
-    ignore_changes = [name]
-  }
-
-  # Optional: allow for local-only testing
-  # depends_on = []
 }
 
-# Use a local flag to decide if the role exists
+# Use try() to safely access the data source (avoid plan-time crash)
 locals {
   ssm_role_exists = can(data.aws_iam_role.existing_ssm_role.arn)
 }
@@ -35,7 +27,7 @@ resource "aws_iam_role" "ssm_role" {
   })
 }
 
-# Choose the correct role ARN or name depending on existence
+# Choose the correct role name depending on whether it exists
 locals {
   ssm_role_name = local.ssm_role_exists ? data.aws_iam_role.existing_ssm_role.name : aws_iam_role.ssm_role[0].name
 }
