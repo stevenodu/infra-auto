@@ -1,5 +1,5 @@
 #!/bin/bash
-GITHUB_TOKEN="${GITHUB_TOKEN}"
+GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 
 set -o errexit
 set -o nounset
@@ -34,7 +34,11 @@ sudo mkdir -p /var/www/html
 
 # Clone your personal site
 cd /var/www/html
-sudo git clone https://${GITHUB_TOKEN}@github.com/stevenodu/odurates.git .
+if [ -n "$GITHUB_TOKEN" ]; then
+  sudo git clone https://${GITHUB_TOKEN}@github.com/stevenodu/odurates.git .
+else
+  echo "WARNING: GITHUB_TOKEN is not set. Skipping repo clone." >> /var/log/bootstrap.log
+fi
 
 # Restart NGINX
 sudo systemctl restart nginx
