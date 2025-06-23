@@ -68,7 +68,7 @@ resource "aws_instance" "oduorates-ec2" {
 
               # Clone your personal site
               cd /var/www/html
-              sudo git clone https://${GITHUB_TOKEN}@github.com/stevenodu/odurates.git  .
+              sudo git clone https://\${GITHUB_TOKEN}@github.com/stevenodu/odurates.git  .
               
               # Restart NGINX
               sudo systemctl restart nginx
