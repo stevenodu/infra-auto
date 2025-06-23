@@ -48,9 +48,20 @@ resource "aws_instance" "oduorates-ec2" {
   tags = {
     Name = "Oduorates-WebsiteServer"
     ForceRedeploy = var.force_redeploy_tag
+    RedeployTime   = timestamp()
   }
+
+  depends_on = [null_resource.redeploy_trigger]
+
   lifecycle {
   create_before_destroy = true
 }
 
+}
+
+
+resource "null_resource" "redeploy_trigger" {
+  triggers = {
+    trigger_value = var.force_redeploy_tag
+  }
 }
