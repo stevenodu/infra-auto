@@ -3,3 +3,9 @@ variable "aws-integration-token" {
   type        = string
   sensitive   = true
 }
+
+variable "aws_region" {
+  description = "AWS Region for deploying resources"
+  type        = string
+  default     = "eu-west-1"
+}
