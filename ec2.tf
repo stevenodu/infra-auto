@@ -42,10 +42,15 @@ resource "aws_instance" "oduorates-ec2" {
   user_data = templatefile("${path.module}/user_data.sh.tpl", {
     GITHUB_TOKEN = var.aws-integration-token
     AWS_REGION   = var.aws_region
+    REBUILD_TRIGGER  = var.rebuild_instance
   })
 
   tags = {
     Name = "Oduorates-WebsiteServer"
     ForceRedeploy = var.force_redeploy_tag
   }
+  lifecycle {
+  create_before_destroy = true
+}
+
 }

@@ -62,6 +62,7 @@ jobs:
           terraform plan \
             -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
             -var="force_redeploy_tag=${{ github.run_number }}" \
+            -var="rebuild_instance=true" \
             -input=false
 
 
@@ -72,6 +73,7 @@ jobs:
             -auto-approve \
             -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
             -var="force_redeploy_tag=${{ github.run_number }}" \
+            -var="rebuild_instance=true" \
             -input=false
 
       - name: Output Public IP or ARN

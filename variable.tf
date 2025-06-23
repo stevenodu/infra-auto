@@ -16,3 +16,10 @@ variable "force_redeploy_tag" {
   type        = string
   default     = "initial"
 }
+
+variable "rebuild_instance" {
+  description = "Change this value to force EC2 recreation"
+  type        = bool
+  default     = false
+}
+
