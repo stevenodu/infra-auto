@@ -37,7 +37,7 @@ resource "aws_instance" "oduorates-ec2" {
   subnet_id                   = aws_subnet.public-subnet.id
   vpc_security_group_ids      = [aws_security_group.web-sg.id]
   associate_public_ip_address = true
-  iam_instance_profile        = local.ssm_profile_name
+  iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
 
   user_data = templatefile("${path.module}/user_data.sh.tpl", {
     GITHUB_TOKEN = var.aws-integration-token

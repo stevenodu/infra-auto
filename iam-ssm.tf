@@ -48,8 +48,7 @@ locals {
 
 # Conditionally create profile
 resource "aws_iam_instance_profile" "ssm_profile" {
-  count = local.ssm_profile_exists ? 0 : 1
-  name  = "SSMProfile"
+  name  = "SSMProfile-${terraform.workspace}"
   role  = local.ssm_role_name
 }
 
