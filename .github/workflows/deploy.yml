@@ -1,17 +1,31 @@
-name: Deploy Infrastructure & Website via SSM
+name: Deploy Infrastructure via Terraform
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select deployment environment
+        required: true
+        options:
+          - production
+          - staging
+      confirm_deployment:
+        type: boolean
+        description: Are you sure you want to apply changes?
+        default: false
+
+permissions:
+  contents: read
+  id-token: write  # Required for OIDC-based AWS auth
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'
-      id-token: 'write'  # Required for OIDC
-    environment: production
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     
     steps:
       - name: Checkout Code
@@ -22,35 +36,25 @@ jobs:
         with:
           terraform_version: 1.8.5
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: us-west-1
           role-to-assume: arn:aws:iam::169364190328:role/GitHubActionsRunnerRole
-          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: af-south-1
 
       - name: Terraform Init
-        run: terraform init
+        run: |
+          terraform init
 
-      - name: Terraform Apply
+      - name: Terraform Plan
+        run: |
+          terraform plan
+
+      - name: Terraform Apply (if confirmed)
+        if: github.event.inputs.confirm_deployment == true
         run: |
           terraform apply -auto-approve
 
-      - name: Export Instance ID
-        id: export_vars
+      - name: Output Public IP or ARN
         run: |
-          echo "INSTANCE_ID=$(terraform output -raw instance_id)" >> $GITHUB_ENV
-
-      - name: Fetch GitHub Token from AWS Secrets Manager
-        id: get_github_token
-        run: |
-          GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id my-github-token | jq -r '.SecretString')
-          echo "GITHUB_TOKEN=$GITHUB_TOKEN" >> $GITHUB_ENV
-
-      - name: Run Deployment Script via SSM
-        run: |
-          aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "DeployPersonalWebsite" \
-            --parameters "{\"commands\":[\"mkdir -p /home/ec2-user/app\",\"cd /home/ec2-user/app\",\"sudo git clone https://${{  env.GITHUB_TOKEN }}@github.com/stevenodu/odurates.git .\",\"sudo systemctl restart nginx\"]}"
+          terraform output
