@@ -57,3 +57,4 @@ resource "aws_iam_instance_profile" "ssm_profile" {
 locals {
   ssm_profile_name = local.ssm_profile_exists ? data.aws_iam_instance_profile.existing_profile.name : aws_iam_instance_profile.ssm_profile[0].name
 }
+
