@@ -39,6 +39,41 @@ resource "aws_instance" "oduorates-ec2" {
   associate_public_ip_address = true
   iam_instance_profile        = local.ssm_profile_name
 
+  user_data = <<-EOF
+              #!/bin/bash
+              GITHUB_TOKEN="${var.aws-integration-token}"
+              set -o errexit
+              set -o nounset
+
+              # Update system
+              sudo apt update -y && sudo apt upgrade -y
+
+              # Install NGINX
+              sudo apt install nginx git -y
+
+              # Replace default NGINX config
+              echo "server {
+                  listen 80;
+                  server_name localhost;
+
+                  location / {
+                      root /var/www/html;
+                      index index.html;
+                      try_files \$uri \$uri/ =404;
+                  }
+              }" | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+              # Create directory
+              sudo mkdir -p /var/www/html
+
+              # Clone your personal site
+              cd /var/www/html
+              sudo git clone https://${GITHUB_TOKEN}@github.com/stevenodu/odurates.git  .
+              
+              # Restart NGINX
+              sudo systemctl restart nginx
+              EOF
+
   tags = {
     Name = "MyWebsiteServer"
   }
