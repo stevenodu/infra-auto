@@ -20,3 +20,70 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+terraform.tfbackend
+.terraform/
+.terraform.lock.hcl
+
+# Kubernetes / ConfigMaps / Secrets (local copies)
+*.yaml
+*.yml
+*.json
+*.properties
+*.log
+*.key
+*.crt
+*.p12
+*.jks
+
+# GitHub Actions
+.github/workflows/*.log
+.github/workspaces/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*.swn
+
+# IDE specific
+.idea/
+.vscode/
+*.iml
+*.pyc
+__pycache__
+*.pyc
+*.sublime-project
+*.sublime-workspace
+
+# Node.js / Web UI (if applicable)
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Python virtual environments
+venv/
+env/
+.pytest_cache/
+__pycache__
+
+# Editor backup files
+*~
+\#*\#
+*.bak
+*.orig
