@@ -32,7 +32,7 @@ resource "aws_security_group" "web-sg" {
 }
 
 resource "aws_instance" "oduorates-ec2" {
-  ami                         = "ami-0c55b159cbfafe1f0"
+  ami                         = "ami-004364947f82c87a0"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public-subnet.id
   vpc_security_group_ids      = [aws_security_group.web-sg.id]
