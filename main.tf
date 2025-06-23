@@ -48,3 +48,12 @@ resource "aws_route_table_association" "public-rta" {
   subnet_id      = aws_subnet.public-subnet.id
   route_table_id = aws_route_table.public-rt.id
 }
+
+
+terraform {
+  backend "s3" {
+    bucket = "oduor-bucket"
+    key    = "state/oduorates.tfstate"
+    region = "us-east-2"
+  }
+}
