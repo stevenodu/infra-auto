@@ -58,11 +58,12 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" -input=false
+
 
       - name: Terraform Apply (if confirmed)
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_deployment == 'true' }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" -input=false
 
       - name: Output Public IP or ARN
         run: terraform output
