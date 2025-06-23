@@ -7,6 +7,13 @@ set -o nounset
 # Update system
 sudo apt update -y && sudo apt upgrade -y
 
+# Install and start SSM Agent
+curl "https://s3.amazonaws.com/amazon-ssm-${AWS_REGION}/latest/debian_amd64/amazon-ssm-agent.deb" -o "ssm-agent.deb"
+sudo dpkg -i ssm-agent.deb
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+
+
 # Install NGINX and Git
 sudo apt install nginx git -y
 
