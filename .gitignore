@@ -20,6 +20,8 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+#user data file
+user_data.sh.tpl
 
 # Terraform
 *.tfstate
