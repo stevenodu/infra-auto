@@ -9,3 +9,10 @@ variable "aws_region" {
   type        = string
   default     = "eu-west-1"
 }
+
+
+variable "force_redeploy_tag" {
+  description = "Dummy tag value used to force EC2 redeployment"
+  type        = string
+  default     = "initial"
+}

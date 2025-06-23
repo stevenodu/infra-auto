@@ -58,12 +58,19 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" -input=false
+        run: terraform plan \
+          -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
+          -var="force_redeploy_tag=${{ github.run_number }}" \
+          -input=false
 
 
       - name: Terraform Apply (if confirmed)
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_deployment == 'true' }}
-        run: terraform apply -auto-approve -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" -input=false
+        run: terraform apply \
+          -auto-approve \
+          -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
+          -var="force_redeploy_tag=${{ github.run_number }}" \
+          -input=false
 
       - name: Output Public IP or ARN
         run: terraform output
