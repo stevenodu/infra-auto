@@ -1,5 +1,5 @@
 #!/bin/bash
-GITHUB_TOKEN="${GITHUB_TOKEN:-}"
+GITHUB_TOKEN="$${GITHUB_TOKEN:-}"
 
 set -o errexit
 set -o nounset
