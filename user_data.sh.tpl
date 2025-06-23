@@ -1,0 +1,33 @@
+#!/bin/bash
+GITHUB_TOKEN="${GITHUB_TOKEN}"
+
+set -o errexit
+set -o nounset
+
+# Update system
+sudo apt update -y && sudo apt upgrade -y
+
+# Install NGINX and Git
+sudo apt install nginx git -y
+
+# Replace default NGINX config
+echo "server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        root /var/www/html;
+        index index.html;
+        try_files \$uri \$uri/ =404;
+    }
+}" | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Create directory
+sudo mkdir -p /var/www/html
+
+# Clone your personal site
+cd /var/www/html
+sudo git clone https://${GITHUB_TOKEN}@github.com/stevenodu/odurates.git .
+
+# Restart NGINX
+sudo systemctl restart nginx

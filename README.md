@@ -7,7 +7,8 @@ my-infra-repo/
 ├── ec2.tf          # Instance setup
 ├── outputs.tf      # Output instance ID
 ├── variables.tf
-└── providers.tf
+├── providers.tf
+└── user_data.sh.tpl
 
 
 
