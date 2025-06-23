@@ -60,7 +60,7 @@ jobs:
       - name: Terraform Plan
         run: |
           terraform plan \
-            -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
+            -var="aws-integration-token=${{ secrets.MY_GITHUB_TOKEN }}" \
             -var="force_redeploy_tag=${{ github.run_number }}" \
             -var="rebuild_instance=true" \
             -input=false
@@ -71,7 +71,7 @@ jobs:
         run: |
           terraform apply \
             -auto-approve \
-            -var="aws-integration-token=${{ secrets.GITHUB_TOKEN_SECRET }}" \
+            -var="aws-integration-token=${{ secrets.MY_GITHUB_TOKEN }}" \
             -var="force_redeploy_tag=${{ github.run_number }}" \
             -var="rebuild_instance=true" \
             -input=false
