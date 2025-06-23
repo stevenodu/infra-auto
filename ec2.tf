@@ -44,6 +44,6 @@ resource "aws_instance" "oduorates-ec2" {
   })
 
   tags = {
-    Name = "MyWebsiteServer"
+    Name = "Oduorates-WebsiteServer"
   }
 }
