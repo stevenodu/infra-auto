@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    # Prevent retriggering on terraform state or lock changes
+    paths-ignore:
+      - '**/*.tfstate'
+      - '**/*.tfstate.backup'
+      - '.terraform/**'
+      - '**/*.lock.hcl'
   workflow_dispatch:
     inputs:
       environment:
@@ -25,9 +31,15 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    
+    environment: ${{ github.event.inputs.environment || 'production' }}
+
     steps:
+      - name: Stop if triggered by bot commit
+        if: ${{ github.actor == 'github-actions[bot]' }}
+        run: |
+          echo "Skipping deployment triggered by bot commit."
+          exit 0
+
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -43,18 +55,14 @@ jobs:
           aws-region: us-west-1
 
       - name: Terraform Init
-        run: |
-          terraform init
+        run: terraform init
 
       - name: Terraform Plan
-        run: |
-          terraform plan
+        run: terraform plan
 
       - name: Terraform Apply (if confirmed)
-        if: github.event.inputs.confirm_deployment == true
-        run: |
-          terraform apply -auto-approve
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_deployment == 'true' }}
+        run: terraform apply -auto-approve
 
       - name: Output Public IP or ARN
-        run: |
-          terraform output
+        run: terraform output
