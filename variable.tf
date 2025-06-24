@@ -23,3 +23,10 @@ variable "rebuild_instance" {
   default     = false
 }
 
+
+variable "autostop_instance" {
+  description = "Flag to indicate whether the EC2 instance should auto-stop via Lambda"
+  type        = bool
+  default     = true  # or false, depending on your default behavior
+}
+
