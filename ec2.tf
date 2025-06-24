@@ -43,13 +43,13 @@ resource "aws_instance" "oduorates-ec2" {
     GITHUB_TOKEN = var.aws-integration-token
     AWS_REGION   = var.aws_region
     REBUILD_TRIGGER  = var.rebuild_instance
-    AUTOSTOP = var.autostop_instance
   })
 
   tags = {
     Name = "Oduorates-WebsiteServer"
     ForceRedeploy = var.force_redeploy_tag
     RedeployTime   = timestamp()
+    Autostop = var.autostop_instance
   }
 
   depends_on = [null_resource.redeploy_trigger]
